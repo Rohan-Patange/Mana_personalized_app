@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const PASSCODE_CONFIG = {
-  correctWord: "Aashritha",
+  correctWord: "Aashritha", // Must match this exact case
   riddleText: "What represents our ultimate sanctuary, a silent prayer etched into tomorrow, and the single word that holds the blueprint of our entire future?",
   clueText1: "Think about the legacy of protection and shelter we wish to create, and a name that begins with the very first letter of the alphabet.",
   clueText2: "Okay, ultimate rescue hint: It starts with 'A' and is the exact name we chose for our future daughter!"
@@ -43,11 +43,10 @@ export const PasscodeStage = ({ onSuccess }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const correctWord = PASSCODE_CONFIG.correctWord.toLowerCase();
     
-    if (passcode.trim().toLowerCase() === correctWord) {
+    // Strict case-sensitive check (removes whitespace trimming only, keeps exact casing)
+    if (passcode.trim() === PASSCODE_CONFIG.correctWord) {
       setIsUnlocked(true);
-      // Wait for heart shower & zoom animation to play before moving to the next page
       setTimeout(() => {
         onSuccess();
       }, 1600);
@@ -61,7 +60,6 @@ export const PasscodeStage = ({ onSuccess }) => {
 
   return (
     <>
-      {/* Magical Heart Shower Overlay on Success */}
       <AnimatePresence>
         {isUnlocked && <HeartRain />}
       </AnimatePresence>
@@ -78,7 +76,7 @@ export const PasscodeStage = ({ onSuccess }) => {
           transition={{ type: "spring", stiffness: 240, damping: 25 }}
           className="relative w-full max-w-[380px] sm:max-w-[420px] bg-[#1a1417] text-[#f4e8eb] border border-rose-500/30 rounded-[24px] sm:rounded-[30px] p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.8)] flex flex-col justify-between overflow-hidden"
         >
-          {/* Top Lock Icon with Magical Zoom-In & Opening Animation */}
+          {/* Top Lock Icon */}
           <div className="flex flex-col items-center text-center">
             <motion.div
               animate={isUnlocked ? { scale: [1, 3.5, 7], rotate: [0, 15, -15, 0], opacity: [1, 1, 0] } : {}}
@@ -92,7 +90,6 @@ export const PasscodeStage = ({ onSuccess }) => {
               Passcode Checkpoint
             </h2>
             
-            {/* Fun Transition Note */}
             <p className="font-['Dancing_Script',cursive] text-rose-300 text-lg sm:text-xl tracking-wide">
               {isUnlocked ? "Let the journey begin... ❤️✨" : "Wait dear, first you need to unlock it... ✨"}
             </p>
@@ -144,7 +141,7 @@ export const PasscodeStage = ({ onSuccess }) => {
             </AnimatePresence>
           </div>
 
-          {/* Password/Bullet Input Form */}
+          {/* Password Input Form */}
           <form onSubmit={handleSubmit} className="space-y-3">
             <motion.div
               animate={error ? { x: [-10, 10, -10, 10, 0] } : {}}
