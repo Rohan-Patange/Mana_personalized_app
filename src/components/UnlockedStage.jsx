@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Import your isolated route components
 import { WhereItBeganView } from "./WhereItBeganView";
+import { CravingsAndComfortsView } from "./CravingsAndComfortsView";
 import { PlaceholderChapter } from "./PlaceholderChapter";
 
 // Ensure this matches your exact file name in the assets folder!
@@ -125,7 +126,6 @@ export const UnlockedStage = ({ onReset }) => {
                 <div 
                   onClick={() => {
                     setIsImageExpanded(true);
-                    // CHANGED: Unlock the first chapter when the map is clicked!
                     if (unlockProgress === -1) {
                       setUnlockProgress(0); 
                     }
@@ -143,7 +143,7 @@ export const UnlockedStage = ({ onReset }) => {
                     🗺️ The Map of Our Hearts
                   </span>
 
-                  {/* Click to Expand Hint - Pulsing if the user hasn't clicked it yet */}
+                  {/* Click to Expand Hint */}
                   <div className={`absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border text-[9px] text-white tracking-wider uppercase flex items-center gap-1 opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all
                     ${unlockProgress === -1 ? 'border-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.6)] animate-pulse' : 'border-white/20'}
                   `}>
@@ -173,6 +173,7 @@ export const UnlockedStage = ({ onReset }) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* CHAPTER 1: Where It All Began */}
                   <BentoCard 
                     title="Where It All Began"
                     desc="Tamhini Ghat, the spark, the confession, and that first Lonavla drive."
@@ -184,15 +185,16 @@ export const UnlockedStage = ({ onReset }) => {
                     borderColor="border-rose-500/30 hover:border-rose-500/60"
                   />
 
+                  {/* CHAPTER 2: Cravings & Comforts (Now matching rose theme) */}
                   <BentoCard 
-                    title="Midnight Therapy"
-                    desc="Late night drives, endless talks, and finding peace on empty roads."
-                    icon="🚗"
+                    title="Cravings & Comforts"
+                    desc="Breakfast dates, late-night Maggi, cozy cafes, and the magic of food made by you."
+                    icon="🍜"
                     colSpan="sm:col-span-2 col-span-1"
                     chapterIndex={1}
-                    viewId="drives"
-                    bgGradient="bg-gradient-to-br from-indigo-950/50 via-zinc-900/80 to-black"
-                    borderColor="border-indigo-500/30 hover:border-indigo-500/60"
+                    viewId="food"
+                    bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
+                    borderColor="border-rose-500/30 hover:border-rose-500/60"
                   />
 
                   <BentoCard 
@@ -249,7 +251,10 @@ export const UnlockedStage = ({ onReset }) => {
         {activeView === "began" && (
           <WhereItBeganView key="began" onComplete={() => handleCompleteChapter(0)} />
         )}
-
+        {/* ROUTE: CRAVINGS & COMFORTS */}
+        {activeView === "food" && (
+          <CravingsAndComfortsView key="food" onComplete={() => handleCompleteChapter(1)} />
+        )}
         {/* ROUTES: PLACEHOLDERS */}
         {activeView === "drives" && <PlaceholderChapter key="drives" title="Midnight Therapy" onBack={() => handleCompleteChapter(1)} />}
         {activeView === "temples" && <PlaceholderChapter key="temples" title="Divine Stops" onBack={() => handleCompleteChapter(2)} />}
@@ -287,10 +292,6 @@ export const UnlockedStage = ({ onReset }) => {
               >
                 Close ✕
               </button>
-              
-              <div className="absolute bottom-4 left-6 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 shadow-xl">
-                  <p className="text-sm text-rose-100 font-medium tracking-wide">OUR JOURNEY: 10 MONTHS & COUNTING</p>
-              </div>
             </motion.div>
           </motion.div>
         )}
