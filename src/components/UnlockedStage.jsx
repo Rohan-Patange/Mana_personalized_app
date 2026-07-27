@@ -6,13 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { WhereItBeganView } from "./WhereItBeganView";
 import { PlaceholderChapter } from "./PlaceholderChapter";
 
-// Import your imagery
-import atmosphericRoad from "../assets/atmospheric-road.jpg";
+// Ensure this matches your exact file name in the assets folder!
+import ourJourneyMap from "../assets/our-journey-map.png";
 
 export const UnlockedStage = ({ onReset }) => {
   const [activeView, setActiveView] = useState("hub");
-  const [unlockProgress, setUnlockProgress] = useState(0);
-  const [isImageExpanded, setIsImageExpanded] = useState(false); // Lightbox state
+  
+  // CHANGED: Start at -1 so Chapter 0 is locked by default
+  const [unlockProgress, setUnlockProgress] = useState(-1); 
+  const [isImageExpanded, setIsImageExpanded] = useState(false);
 
   const handleCompleteChapter = (completedIndex) => {
     setActiveView("hub");
@@ -72,7 +74,11 @@ export const UnlockedStage = ({ onReset }) => {
             {title}
           </h4>
           <p className="text-zinc-300/80 font-normal text-xs line-clamp-2 leading-relaxed">
-            {isUnlocked ? desc : "Complete the preceding chapter to unlock this memory."}
+            {isUnlocked 
+              ? desc 
+              : chapterIndex === 0 
+                ? "Expand 'The Map of Our Hearts' to begin your journey." 
+                : "Complete the preceding chapter to unlock this memory."}
           </p>
         </div>
       </motion.div>
@@ -81,6 +87,8 @@ export const UnlockedStage = ({ onReset }) => {
 
   return (
     <div className="absolute inset-0 z-25 w-full h-full bg-[#0d0a0f] overflow-hidden">
+      
+      {/* MAIN VIEW ROUTING */}
       <AnimatePresence mode="wait">
         
         {/* ROUTE: THE HUB */}
@@ -94,41 +102,51 @@ export const UnlockedStage = ({ onReset }) => {
             className="w-full h-full flex flex-col overflow-y-auto px-4 sm:px-8 pt-6 pb-28 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-rose-500/20"
           >
             
-            {/* --- PAGE BANNER / HEADER --- */}
+            {/* PAGE BANNER / HEADER */}
             <div className="text-center max-w-3xl mx-auto mb-6 shrink-0">
-              <span className="text-rose-400 text-[10px] tracking-[0.4em] uppercase font-bold block mb-1">
-                Milestone Memory Vault
+              <span className="text-rose-400 text-[10px] tracking-[0.4em] uppercase font-bold block mb-2">
+                The Story of Us
               </span>
-              <h1 className="font-['Playfair_Display',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide">
-                Our Journey: 10 Months & Counting
+              <h1 className="font-['Playfair_Display',serif] text-2xl sm:text-3xl font-bold text-white tracking-wide mb-1">
+                10 Months
               </h1>
+              <p className="font-['Playfair_Display',serif] text-sm sm:text-base italic text-zinc-400 tracking-widest">
+                & counting thousands of kilometers...
+              </p>
             </div>
 
-            {/* --- TWO-PANE DESKTOP / STACKED MOBILE LAYOUT --- */}
+            {/* TWO-PANE LAYOUT */}
             <div className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               
-              {/* LEFT PANE: Image (Top) & Journey Note (Bottom) */}
+              {/* LEFT PANE */}
               <div className="lg:col-span-5 flex flex-col gap-6">
                 
-                {/* Clickable Map Image Card with Expand Hint */}
+                {/* Clickable Map Image Card */}
                 <div 
-                  onClick={() => setIsImageExpanded(true)}
-                  className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/40 backdrop-blur-md group cursor-pointer h-64 sm:h-72 w-full"
+                  onClick={() => {
+                    setIsImageExpanded(true);
+                    // CHANGED: Unlock the first chapter when the map is clicked!
+                    if (unlockProgress === -1) {
+                      setUnlockProgress(0); 
+                    }
+                  }}
+                  className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/80 backdrop-blur-md group cursor-pointer w-full aspect-[16/10]"
                 >
                   <img 
-                    src={atmosphericRoad} 
+                    src={ourJourneyMap} 
                     alt="Our Journey Map" 
-                    className="w-full h-full object-cover filter contrast-105 group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-contain p-1.5 filter contrast-105 group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                   
-                  {/* Badge */}
-                  <span className="absolute bottom-3 left-3 text-[10px] tracking-widest text-rose-300 uppercase font-bold bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/30 shadow">
+                  <span className="absolute bottom-3 left-3 text-[10px] tracking-widest text-rose-300 uppercase font-bold bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-rose-500/30 shadow">
                     🗺️ The Map of Our Hearts
                   </span>
 
-                  {/* Click to Expand Hint Overlay */}
-                  <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 text-[9px] text-white tracking-wider uppercase flex items-center gap-1 opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all">
+                  {/* Click to Expand Hint - Pulsing if the user hasn't clicked it yet */}
+                  <div className={`absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border text-[9px] text-white tracking-wider uppercase flex items-center gap-1 opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all
+                    ${unlockProgress === -1 ? 'border-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.6)] animate-pulse' : 'border-white/20'}
+                  `}>
                     <span>🔍</span> Click to Expand
                   </div>
                 </div>
@@ -141,14 +159,14 @@ export const UnlockedStage = ({ onReset }) => {
                   <h3 className="font-['Playfair_Display',serif] text-xl font-bold text-white mb-3 leading-snug">
                     Thousands of Kilometers & Endless Memories
                   </h3>
-                  <p className="text-zinc-300/90 text-xs sm:text-sm leading-relaxed italic font-['Playfair_Display',serif]">
-                    "Ten months, thousands of kilometers, and an endless list of moments later, it doesn't actually matter where we're going, as long as I'm in the passenger seat next to you."
+                  <p className="text-zinc-300 text-sm leading-relaxed font-light italic opacity-90 tracking-wide">
+                    "Ten months, thousands of kilometers, and an endless map of roads later, I’ve realized something true: no matter how far we drive, I’m never searching for a destination. With you in the passenger seat, every highway, every quiet cafe, and every midnight stop isn't a place we're visiting—it's just me coming home."
                   </p>
                 </div>
 
               </div>
 
-              {/* RIGHT PANE: The Bento Chapter Grids */}
+              {/* RIGHT PANE: Bento Grids */}
               <div className="lg:col-span-7 flex flex-col gap-4">
                 <div className="mb-1 hidden lg:block">
                   <h3 className="text-sm font-semibold text-zinc-400 tracking-wider uppercase">Unlocked Chapters</h3>
@@ -211,7 +229,6 @@ export const UnlockedStage = ({ onReset }) => {
                   />
                 </div>
 
-                {/* Global Lock Vault Button */}
                 <div className="w-full flex justify-center pt-6">
                   <button
                     onClick={onReset}
@@ -228,39 +245,6 @@ export const UnlockedStage = ({ onReset }) => {
           </motion.div>
         )}
 
-        {/* --- LIGHTBOX MODAL FOR EXPANDED IMAGE --- */}
-        <AnimatePresence>
-          {isImageExpanded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsImageExpanded(false)}
-              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 cursor-pointer"
-            >
-              <motion.div 
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden rounded-3xl border border-white/20 shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img 
-                  src={atmosphericRoad} 
-                  alt="Expanded Map" 
-                  className="w-full h-full object-contain max-h-[85vh]"
-                />
-                <button 
-                  onClick={() => setIsImageExpanded(false)}
-                  className="absolute top-4 right-4 bg-black/70 hover:bg-black text-white text-xs px-4 py-2 rounded-full border border-white/20 backdrop-blur-md transition-all cursor-pointer uppercase tracking-wider"
-                >
-                  Close ✕
-                </button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* ROUTE: WHERE IT ALL BEGAN */}
         {activeView === "began" && (
           <WhereItBeganView key="began" onComplete={() => handleCompleteChapter(0)} />
@@ -272,6 +256,44 @@ export const UnlockedStage = ({ onReset }) => {
         {activeView === "cafes" && <PlaceholderChapter key="cafes" title="Cafe Dates" onBack={() => handleCompleteChapter(3)} />}
         {activeView === "escapes" && <PlaceholderChapter key="escapes" title="Our Escapes" onBack={() => handleCompleteChapter(4)} />}
         
+      </AnimatePresence>
+
+      {/* LIGHTBOX MODAL */}
+      <AnimatePresence>
+        {isImageExpanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsImageExpanded(false)}
+            className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 cursor-pointer"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-6xl w-full max-h-[90vh] overflow-hidden rounded-3xl border border-white/20 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img 
+                src={ourJourneyMap} 
+                alt="Expanded Journey Map" 
+                className="w-full h-full object-contain max-h-[90vh]"
+              />
+              <button 
+                onClick={() => setIsImageExpanded(false)}
+                className="absolute top-4 right-4 bg-black/70 hover:bg-black text-white text-xs px-5 py-2.5 rounded-full border border-white/30 backdrop-blur-md transition-all cursor-pointer uppercase tracking-wider font-medium shadow-lg"
+              >
+                Close ✕
+              </button>
+              
+              <div className="absolute bottom-4 left-6 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 shadow-xl">
+                  <p className="text-sm text-rose-100 font-medium tracking-wide">OUR JOURNEY: 10 MONTHS & COUNTING</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
