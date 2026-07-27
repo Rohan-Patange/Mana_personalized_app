@@ -3,8 +3,9 @@ import React from "react";
 import { motion } from "framer-motion";
 
 export const InnerSanctumView = ({ unlockProgress, onNavigate }) => {
-  // Determine what is unlocked based on progress
-  // Letters (Index 4) are always unlocked upon entering the Sanctum
+  // Letters (Index 4) unlock entry to Sanctum
+  // Gallery (Index 5) unlocks the Memory Gallery
+  // Finale (Index 6) unlocks The Private Ceremony
   const isGalleryUnlocked = unlockProgress >= 5;
   const isFinaleUnlocked = unlockProgress >= 6;
 
@@ -94,7 +95,7 @@ export const InnerSanctumView = ({ unlockProgress, onNavigate }) => {
             title="Letters of Love" 
             subtitle="The words we shared along the way."
             icon="💌" 
-            isUnlocked={true} // Always unlocked in the Sanctum
+            isUnlocked={true} 
             onClick={() => onNavigate("letters")}
             delay={0.4}
           />
@@ -113,7 +114,7 @@ export const InnerSanctumView = ({ unlockProgress, onNavigate }) => {
             subtitle="The day everything changed forever."
             icon="💍" 
             isUnlocked={isFinaleUnlocked} 
-            onClick={() => onNavigate("finale")} // We will build this view next!
+            onClick={() => onNavigate("finale")}
             delay={0.8}
           />
 

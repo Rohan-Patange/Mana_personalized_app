@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Import existing route components
+// Import route components
 import ourJourneyMap from "../assets/our-journey-map.png";
 import { WhereItBeganView } from "./WhereItBeganView";
 import { CravingsAndComfortsView } from "./CravingsAndComfortsView";
@@ -12,7 +12,7 @@ import { SecretGateway } from "./SecretGateway";
 import { InnerSanctumView } from "./InnerSanctumView";
 import { LoveLettersView } from "./LoveLettersView";
 import { MemoryGalleryView } from "./MemoryGalleryView";
-
+import { FinaleView } from "./FinaleView";
 
 export const UnlockedStage = ({ onReset }) => {
   const [activeView, setActiveView] = useState("hub");
@@ -27,13 +27,21 @@ export const UnlockedStage = ({ onReset }) => {
       setUnlockProgress(completedIndex + 1);
     }
     
-    // ALWAYS send her back to the Inner Sanctum after finishing Letters or Gallery
-    if (completedIndex >= 4) {
+    // Route back based on what was completed
+    if (completedIndex === 4) {
+      // After finishing letters, send back to inner sanctum (gallery becomes unlocked)
       setActiveView("inner-sanctum");
+    } else if (completedIndex === 5) {
+      // After finishing gallery, send back to inner sanctum (finale becomes unlocked)
+      setActiveView("inner-sanctum");
+    } else if (completedIndex >= 6) {
+      // After finishing the finale, return to hub or celebrate
+      setActiveView("hub");
     } else {
-      setActiveView("hub"); // Only travel chapters go back to the map hub
+      setActiveView("hub"); // Travel chapters go back to map hub
     }
   };
+
   // Reusable Bento Card Component
   const BentoCard = ({ title, desc, icon, colSpan, chapterIndex, viewId, bgGradient, borderColor }) => {
     const isUnlocked = unlockProgress >= chapterIndex;
@@ -129,7 +137,7 @@ export const UnlockedStage = ({ onReset }) => {
             {/* MAIN TWO-PANE LAYOUT */}
             <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch pb-10">
               
-              {/* LEFT PANE: Perfectly matched height cards */}
+              {/* LEFT PANE */}
               <div className="lg:col-span-5 flex flex-col gap-6 justify-between">
                 
                 {/* Clickable Map Image Card */}
@@ -153,7 +161,6 @@ export const UnlockedStage = ({ onReset }) => {
                     🗺️ The Map of Our Hearts
                   </span>
 
-                  {/* Click to Expand Hint */}
                   <div className={`absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border text-[9px] text-white tracking-wider uppercase flex items-center gap-1 opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all
                     ${unlockProgress === -1 ? 'border-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.6)] animate-pulse' : 'border-white/20'}
                   `}>
@@ -185,7 +192,6 @@ export const UnlockedStage = ({ onReset }) => {
 
                   <div className="flex flex-col gap-4">
                     
-                    {/* CHAPTER 1: Where It All Began */}
                     <BentoCard 
                       title="Where It All Began"
                       desc="Tamhini Ghat, the spark, the confession, and that first Lonavla drive."
@@ -197,7 +203,6 @@ export const UnlockedStage = ({ onReset }) => {
                       borderColor="border-rose-500/30 hover:border-rose-500/60"
                     />
 
-                    {/* CHAPTER 2: Cravings & Comforts */}
                     <BentoCard 
                       title="Cravings & Comforts"
                       desc="Breakfast dates, late-night Maggi, cozy cafes, and the magic of food made by you."
@@ -209,7 +214,6 @@ export const UnlockedStage = ({ onReset }) => {
                       borderColor="border-rose-500/30 hover:border-rose-500/60"
                     />
 
-                    {/* CHAPTER 3: Divine Stops */}
                     <BentoCard 
                       title="Divine Stops"
                       desc="Seeking blessings at beautiful temples along our way."
@@ -221,7 +225,6 @@ export const UnlockedStage = ({ onReset }) => {
                       borderColor="border-rose-500/30 hover:border-rose-500/60"
                     />
 
-                    {/* CHAPTER 4: Our Escapes */}
                     <BentoCard 
                       title="Our Escapes"
                       desc="Weekend trips, new horizons, and making memories far from home."
@@ -236,7 +239,7 @@ export const UnlockedStage = ({ onReset }) => {
                   </div>
                 </div>
 
-                {/* DYNAMIC BOTTOM BUTTON: Either Lock Vault OR Unlock Inner Sanctum */}
+                {/* BOTTOM BUTTON */}
                 <div className="w-full flex justify-center pt-6 pb-10 border-t border-white/5 mt-4">
                   {unlockProgress >= 4 ? (
                     <button
@@ -277,7 +280,7 @@ export const UnlockedStage = ({ onReset }) => {
           <OurEscapesView key="escapes" onComplete={() => handleCompleteStep(3)} />
         )}
 
-        {/* --- THE SECRET GATEWAY & INNER SANCTUM --- */}
+        {/* THE SECRET GATEWAY & INNER SANCTUM */}
         {activeView === "secret-gateway" && (
           <SecretGateway key="secret-gateway" onUnlock={() => setActiveView("inner-sanctum")} />
         )}
@@ -289,7 +292,8 @@ export const UnlockedStage = ({ onReset }) => {
             onNavigate={(view) => setActiveView(view)} 
           />
         )}
-        {/* --- LETTERS & GALLERY ROUTES --- */}
+
+        {/* LETTERS, GALLERY & FINALE ROUTES */}
         {activeView === "letters" && (
           <LoveLettersView key="letters" onComplete={() => handleCompleteStep(4)} />
         )}
@@ -297,6 +301,11 @@ export const UnlockedStage = ({ onReset }) => {
         {activeView === "gallery" && (
           <MemoryGalleryView key="gallery" onComplete={() => handleCompleteStep(5)} />
         )}
+
+        {activeView === "finale" && (
+          <FinaleView key="finale" onComplete={() => handleCompleteStep(6)} />
+        )}
+
       </AnimatePresence>
 
       {/* LIGHTBOX MODAL */}
