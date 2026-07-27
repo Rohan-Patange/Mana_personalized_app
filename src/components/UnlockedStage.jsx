@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Import your isolated route components
 import { WhereItBeganView } from "./WhereItBeganView";
 import { CravingsAndComfortsView } from "./CravingsAndComfortsView";
+import { DivineStopsView } from "./DivineStopsView";
 import { PlaceholderChapter } from "./PlaceholderChapter";
 
 // Ensure this matches your exact file name in the assets folder!
@@ -197,6 +198,7 @@ export const UnlockedStage = ({ onReset }) => {
                     borderColor="border-rose-500/30 hover:border-rose-500/60"
                   />
 
+                  {/* CHAPTER 3: Divine Stops */}
                   <BentoCard 
                     title="Divine Stops"
                     desc="Seeking blessings at beautiful temples along our way."
@@ -204,8 +206,8 @@ export const UnlockedStage = ({ onReset }) => {
                     colSpan="col-span-1"
                     chapterIndex={2}
                     viewId="temples"
-                    bgGradient="bg-gradient-to-br from-orange-950/40 via-zinc-900/80 to-black"
-                    borderColor="border-orange-500/30 hover:border-orange-500/60"
+                    bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
+                    borderColor="border-rose-500/30 hover:border-rose-500/60"
                   />
 
                   <BentoCard 
@@ -255,9 +257,11 @@ export const UnlockedStage = ({ onReset }) => {
         {activeView === "food" && (
           <CravingsAndComfortsView key="food" onComplete={() => handleCompleteChapter(1)} />
         )}
+        {/* ROUTE: DIVINE STOPS */}
+        {activeView === "temples" && (
+          <DivineStopsView key="temples" onComplete={() => handleCompleteChapter(2)} />
+        )}
         {/* ROUTES: PLACEHOLDERS */}
-        {activeView === "drives" && <PlaceholderChapter key="drives" title="Midnight Therapy" onBack={() => handleCompleteChapter(1)} />}
-        {activeView === "temples" && <PlaceholderChapter key="temples" title="Divine Stops" onBack={() => handleCompleteChapter(2)} />}
         {activeView === "cafes" && <PlaceholderChapter key="cafes" title="Cafe Dates" onBack={() => handleCompleteChapter(3)} />}
         {activeView === "escapes" && <PlaceholderChapter key="escapes" title="Our Escapes" onBack={() => handleCompleteChapter(4)} />}
         
