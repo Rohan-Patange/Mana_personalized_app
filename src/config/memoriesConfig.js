@@ -18,7 +18,7 @@ import ourEscapes2 from '../assets/our_escapes_2.jpg';
 import ourEscapes3 from '../assets/our_escapes_3.jpg';
 import pool from '../assets/pool.jpg';
 import shegaon from '../assets/shegaon.jpg';
-import forever from '../assets/forever.jpg';
+import mehendi from '../assets/mehendi.jpg';
 
 export const memoriesData = [
   { id: 1, title: "", date: "Keepsake", image: ai1, description: "🤍" },
@@ -38,5 +38,5 @@ export const memoriesData = [
   { id: 18, title: "", date: "Keepsake", image: ourEscapes3, description: "🤍" },
   { id: 20, title: "", date: "Keepsake", image: pool, description: "🤍" },
   { id: 21, title: "", date: "Keepsake", image: shegaon, description: "🤍" },
-  { id: 22, title: "", date: "Keepsake", image: forever, description: "🤍" }
+  { id: 22, title: "", date: "Keepsake", image: mehendi, description: "🤍" }
 ];

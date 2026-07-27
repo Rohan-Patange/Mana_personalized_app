@@ -1,4 +1,5 @@
 import mirrorPhoto from "../assets/mirror-moment.jpg";
+import kehteHainAudio from "../assets/kehte-hain.mp3";
 
 export const LETTER_CONFIG = {
   // Top Right Tag & Sub-badge
@@ -23,11 +24,9 @@ export const LETTER_CONFIG = {
   photoCaption: "Reflecting on my favorite view ✨",
 
   // Audio Player
-  songTitle: "A song for your day",
-  songSubtext: "OUR SPECIAL PLACE",
-  audioSrc: "./mana-voice.mp3",
+  songTitle: "Play to listen",
+  songSubtext: "JUST FOR YOU",
+  audioSrc: kehteHainAudio,
   loopDurationSeconds: 20,
 
-  // Passcode
-  secretPasscode: "1204",
 };
