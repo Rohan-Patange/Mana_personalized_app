@@ -2,15 +2,17 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Import your isolated route components
+// Import existing route components
+import ourJourneyMap from "../assets/our-journey-map.png";
 import { WhereItBeganView } from "./WhereItBeganView";
 import { CravingsAndComfortsView } from "./CravingsAndComfortsView";
 import { DivineStopsView } from "./DivineStopsView";
 import { OurEscapesView } from "./OurEscapesView";
-import { PlaceholderChapter } from "./PlaceholderChapter";
+import { SecretGateway } from "./SecretGateway";
+import { InnerSanctumView } from "./InnerSanctumView";
+import { LoveLettersView } from "./LoveLettersView";
+import { MemoryGalleryView } from "./MemoryGalleryView";
 
-// Ensure this matches your exact file name in the assets folder!
-import ourJourneyMap from "../assets/our-journey-map.png";
 
 export const UnlockedStage = ({ onReset }) => {
   const [activeView, setActiveView] = useState("hub");
@@ -19,13 +21,19 @@ export const UnlockedStage = ({ onReset }) => {
   const [unlockProgress, setUnlockProgress] = useState(-1); 
   const [isImageExpanded, setIsImageExpanded] = useState(false);
 
-  const handleCompleteChapter = (completedIndex) => {
-    setActiveView("hub");
+  // Updated handler for progression
+  const handleCompleteStep = (completedIndex) => {
     if (unlockProgress <= completedIndex) {
       setUnlockProgress(completedIndex + 1);
     }
+    
+    // ALWAYS send her back to the Inner Sanctum after finishing Letters or Gallery
+    if (completedIndex >= 4) {
+      setActiveView("inner-sanctum");
+    } else {
+      setActiveView("hub"); // Only travel chapters go back to the map hub
+    }
   };
-
   // Reusable Bento Card Component
   const BentoCard = ({ title, desc, icon, colSpan, chapterIndex, viewId, bgGradient, borderColor }) => {
     const isUnlocked = unlockProgress >= chapterIndex;
@@ -66,10 +74,10 @@ export const UnlockedStage = ({ onReset }) => {
         </div>
 
         {isUnlocked && unlockProgress === chapterIndex && (
-           <div className="absolute top-5 left-5 flex items-center gap-2">
-             <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)] animate-ping" />
-             <span className="text-[9px] uppercase tracking-widest text-rose-300 font-bold">Ready</span>
-           </div>
+            <div className="absolute top-5 left-5 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)] animate-ping" />
+              <span className="text-[9px] uppercase tracking-widest text-rose-300 font-bold">Ready</span>
+            </div>
         )}
 
         <div className="relative z-10 mt-3">
@@ -219,7 +227,7 @@ export const UnlockedStage = ({ onReset }) => {
                       desc="Weekend trips, new horizons, and making memories far from home."
                       icon="✈️"
                       colSpan="col-span-1"
-                      chapterIndex={3} // <-- Change this from 4 to 3
+                      chapterIndex={3}
                       viewId="escapes"
                       bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
                       borderColor="border-rose-500/30 hover:border-rose-500/60"
@@ -228,14 +236,23 @@ export const UnlockedStage = ({ onReset }) => {
                   </div>
                 </div>
 
-                {/* Centered Lock Button */}
-                <div className="w-full flex justify-center pt-6">
-                  <button
-                    onClick={onReset}
-                    className="w-full max-w-[280px] bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-rose-200 font-medium py-3 px-4 rounded-2xl text-[10px] tracking-widest uppercase transition-all cursor-pointer border border-white/10 shadow-lg"
-                  >
-                    Lock the Vault 🔒
-                  </button>
+                {/* DYNAMIC BOTTOM BUTTON: Either Lock Vault OR Unlock Inner Sanctum */}
+                <div className="w-full flex justify-center pt-6 pb-10 border-t border-white/5 mt-4">
+                  {unlockProgress >= 4 ? (
+                    <button
+                      onClick={() => setActiveView("secret-gateway")}
+                      className="w-full max-w-[320px] bg-rose-950/40 hover:bg-rose-900/60 text-rose-200 font-bold py-4 px-4 rounded-2xl text-[10px] tracking-widest uppercase transition-all cursor-pointer border border-rose-500/30 shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] hover:-translate-y-1 animate-pulse"
+                    >
+                      Unlock the Inner Vault 🗝️
+                    </button>
+                  ) : (
+                    <button
+                      onClick={onReset}
+                      className="w-full max-w-[280px] bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-rose-200 font-medium py-3 px-4 rounded-2xl text-[10px] tracking-widest uppercase transition-all cursor-pointer border border-white/10 shadow-lg"
+                    >
+                      Lock the Vault 🔒
+                    </button>
+                  )}
                 </div>
 
               </div>
@@ -245,23 +262,41 @@ export const UnlockedStage = ({ onReset }) => {
           </motion.div>
         )}
 
-        {/* ROUTE: WHERE IT ALL BEGAN */}
+        {/* --- VIEW ROUTING SWITCHER --- */}
+
         {activeView === "began" && (
-          <WhereItBeganView key="began" onComplete={() => handleCompleteChapter(0)} />
+          <WhereItBeganView key="began" onComplete={() => handleCompleteStep(0)} />
         )}
-        {/* ROUTE: CRAVINGS & COMFORTS */}
         {activeView === "food" && (
-          <CravingsAndComfortsView key="food" onComplete={() => handleCompleteChapter(1)} />
+          <CravingsAndComfortsView key="food" onComplete={() => handleCompleteStep(1)} />
         )}
-        {/* ROUTE: DIVINE STOPS */}
         {activeView === "temples" && (
-          <DivineStopsView key="temples" onComplete={() => handleCompleteChapter(2)} />
+          <DivineStopsView key="temples" onComplete={() => handleCompleteStep(2)} />
         )}
-        {/* ROUTE: OUR ESCAPES */}
         {activeView === "escapes" && (
-          <OurEscapesView key="escapes" onComplete={() => handleCompleteChapter(4)} />
+          <OurEscapesView key="escapes" onComplete={() => handleCompleteStep(3)} />
+        )}
+
+        {/* --- THE SECRET GATEWAY & INNER SANCTUM --- */}
+        {activeView === "secret-gateway" && (
+          <SecretGateway key="secret-gateway" onUnlock={() => setActiveView("inner-sanctum")} />
         )}
         
+        {activeView === "inner-sanctum" && (
+          <InnerSanctumView 
+            key="inner-sanctum" 
+            unlockProgress={unlockProgress} 
+            onNavigate={(view) => setActiveView(view)} 
+          />
+        )}
+        {/* --- LETTERS & GALLERY ROUTES --- */}
+        {activeView === "letters" && (
+          <LoveLettersView key="letters" onComplete={() => handleCompleteStep(4)} />
+        )}
+        
+        {activeView === "gallery" && (
+          <MemoryGalleryView key="gallery" onComplete={() => handleCompleteStep(5)} />
+        )}
       </AnimatePresence>
 
       {/* LIGHTBOX MODAL */}
