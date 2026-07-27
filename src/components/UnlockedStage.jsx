@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { WhereItBeganView } from "./WhereItBeganView";
 import { CravingsAndComfortsView } from "./CravingsAndComfortsView";
 import { DivineStopsView } from "./DivineStopsView";
+import { OurEscapesView } from "./OurEscapesView";
 import { PlaceholderChapter } from "./PlaceholderChapter";
 
 // Ensure this matches your exact file name in the assets folder!
@@ -14,7 +15,7 @@ import ourJourneyMap from "../assets/our-journey-map.png";
 export const UnlockedStage = ({ onReset }) => {
   const [activeView, setActiveView] = useState("hub");
   
-  // CHANGED: Start at -1 so Chapter 0 is locked by default
+  // Start at -1 so Chapter 0 is locked by default
   const [unlockProgress, setUnlockProgress] = useState(-1); 
   const [isImageExpanded, setIsImageExpanded] = useState(false);
 
@@ -46,7 +47,7 @@ export const UnlockedStage = ({ onReset }) => {
             : "cursor-not-allowed border-white/5 bg-white/[0.01] opacity-50 grayscale"
           }
         `}
-        style={{ minHeight: "150px" }}
+        style={{ minHeight: "135px" }}
       >
         {isUnlocked && (
           <div className="absolute inset-0 bg-gradient-to-t from-rose-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -67,11 +68,11 @@ export const UnlockedStage = ({ onReset }) => {
         {isUnlocked && unlockProgress === chapterIndex && (
            <div className="absolute top-5 left-5 flex items-center gap-2">
              <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,1)] animate-ping" />
-             <span className="text-[9px] uppercase tracking-widest text-rose-300 font-bold">Ready to Explore</span>
+             <span className="text-[9px] uppercase tracking-widest text-rose-300 font-bold">Ready</span>
            </div>
         )}
 
-        <div className="relative z-10 mt-4">
+        <div className="relative z-10 mt-3">
           <h4 className={`font-['Playfair_Display',serif] font-bold mb-1 text-lg ${isUnlocked ? "text-white" : "text-zinc-500"}`}>
             {title}
           </h4>
@@ -80,7 +81,7 @@ export const UnlockedStage = ({ onReset }) => {
               ? desc 
               : chapterIndex === 0 
                 ? "Expand 'The Map of Our Hearts' to begin your journey." 
-                : "Complete the preceding chapter to unlock this memory."}
+                : "Complete preceding chapter to unlock."}
           </p>
         </div>
       </motion.div>
@@ -88,7 +89,7 @@ export const UnlockedStage = ({ onReset }) => {
   };
 
   return (
-    <div className="absolute inset-0 z-25 w-full h-full bg-[#0d0a0f] overflow-hidden">
+    <div className="absolute inset-0 z-25 w-full h-full bg-[#0d0a0f] overflow-hidden flex flex-col">
       
       {/* MAIN VIEW ROUTING */}
       <AnimatePresence mode="wait">
@@ -101,7 +102,7 @@ export const UnlockedStage = ({ onReset }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.6 }}
-            className="w-full h-full flex flex-col overflow-y-auto px-4 sm:px-8 pt-6 pb-28 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-rose-500/20"
+            className="w-full h-full flex flex-col overflow-y-auto px-4 sm:px-8 py-6 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-rose-500/20"
           >
             
             {/* PAGE BANNER / HEADER */}
@@ -117,11 +118,11 @@ export const UnlockedStage = ({ onReset }) => {
               </p>
             </div>
 
-            {/* TWO-PANE LAYOUT */}
-            <div className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* MAIN TWO-PANE LAYOUT */}
+            <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch pb-10">
               
-              {/* LEFT PANE */}
-              <div className="lg:col-span-5 flex flex-col gap-6">
+              {/* LEFT PANE: Perfectly matched height cards */}
+              <div className="lg:col-span-5 flex flex-col gap-6 justify-between">
                 
                 {/* Clickable Map Image Card */}
                 <div 
@@ -131,12 +132,12 @@ export const UnlockedStage = ({ onReset }) => {
                       setUnlockProgress(0); 
                     }
                   }}
-                  className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/80 backdrop-blur-md group cursor-pointer w-full aspect-[16/10]"
+                  className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/80 backdrop-blur-md group cursor-pointer w-full flex-1 min-h-[220px]"
                 >
                   <img 
                     src={ourJourneyMap} 
                     alt="Our Journey Map" 
-                    className="w-full h-full object-contain p-1.5 filter contrast-105 group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-contain p-2 filter contrast-105 group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                   
@@ -153,7 +154,7 @@ export const UnlockedStage = ({ onReset }) => {
                 </div>
 
                 {/* Journey Note Card */}
-                <div className="bg-white/[0.03] border border-white/10 p-6 rounded-3xl backdrop-blur-md shadow-xl flex flex-col justify-center">
+                <div className="bg-white/[0.03] border border-white/10 p-6 sm:p-7 rounded-3xl backdrop-blur-md shadow-xl flex flex-col justify-center flex-1 min-h-[260px]">
                   <span className="text-rose-400 text-[10px] tracking-[0.3em] uppercase font-bold mb-2 block">
                     The Love Log
                   </span>
@@ -168,75 +169,70 @@ export const UnlockedStage = ({ onReset }) => {
               </div>
 
               {/* RIGHT PANE: Bento Grids */}
-              <div className="lg:col-span-7 flex flex-col gap-4">
-                <div className="mb-1 hidden lg:block">
-                  <h3 className="text-sm font-semibold text-zinc-400 tracking-wider uppercase">Unlocked Chapters</h3>
+              <div className="lg:col-span-7 flex flex-col justify-between">
+                <div>
+                  <div className="mb-2">
+                    <h3 className="text-xs font-semibold text-zinc-400 tracking-wider uppercase">Unlocked Chapters</h3>
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    
+                    {/* CHAPTER 1: Where It All Began */}
+                    <BentoCard 
+                      title="Where It All Began"
+                      desc="Tamhini Ghat, the spark, the confession, and that first Lonavla drive."
+                      icon="🗺️"
+                      colSpan="col-span-1"
+                      chapterIndex={0}
+                      viewId="began"
+                      bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
+                      borderColor="border-rose-500/30 hover:border-rose-500/60"
+                    />
+
+                    {/* CHAPTER 2: Cravings & Comforts */}
+                    <BentoCard 
+                      title="Cravings & Comforts"
+                      desc="Breakfast dates, late-night Maggi, cozy cafes, and the magic of food made by you."
+                      icon="🍜"
+                      colSpan="col-span-1"
+                      chapterIndex={1}
+                      viewId="food"
+                      bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
+                      borderColor="border-rose-500/30 hover:border-rose-500/60"
+                    />
+
+                    {/* CHAPTER 3: Divine Stops */}
+                    <BentoCard 
+                      title="Divine Stops"
+                      desc="Seeking blessings at beautiful temples along our way."
+                      icon="🛕"
+                      colSpan="col-span-1"
+                      chapterIndex={2}
+                      viewId="temples"
+                      bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
+                      borderColor="border-rose-500/30 hover:border-rose-500/60"
+                    />
+
+                    {/* CHAPTER 4: Our Escapes */}
+                    <BentoCard 
+                      title="Our Escapes"
+                      desc="Weekend trips, new horizons, and making memories far from home."
+                      icon="✈️"
+                      colSpan="col-span-1"
+                      chapterIndex={3} // <-- Change this from 4 to 3
+                      viewId="escapes"
+                      bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
+                      borderColor="border-rose-500/30 hover:border-rose-500/60"
+                    />
+
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* CHAPTER 1: Where It All Began */}
-                  <BentoCard 
-                    title="Where It All Began"
-                    desc="Tamhini Ghat, the spark, the confession, and that first Lonavla drive."
-                    icon="🗺️"
-                    colSpan="sm:col-span-2 col-span-1"
-                    chapterIndex={0}
-                    viewId="began"
-                    bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
-                    borderColor="border-rose-500/30 hover:border-rose-500/60"
-                  />
-
-                  {/* CHAPTER 2: Cravings & Comforts (Now matching rose theme) */}
-                  <BentoCard 
-                    title="Cravings & Comforts"
-                    desc="Breakfast dates, late-night Maggi, cozy cafes, and the magic of food made by you."
-                    icon="🍜"
-                    colSpan="sm:col-span-2 col-span-1"
-                    chapterIndex={1}
-                    viewId="food"
-                    bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
-                    borderColor="border-rose-500/30 hover:border-rose-500/60"
-                  />
-
-                  {/* CHAPTER 3: Divine Stops */}
-                  <BentoCard 
-                    title="Divine Stops"
-                    desc="Seeking blessings at beautiful temples along our way."
-                    icon="🛕"
-                    colSpan="col-span-1"
-                    chapterIndex={2}
-                    viewId="temples"
-                    bgGradient="bg-gradient-to-br from-rose-950/50 via-zinc-900/80 to-black"
-                    borderColor="border-rose-500/30 hover:border-rose-500/60"
-                  />
-
-                  <BentoCard 
-                    title="Cafe Dates"
-                    desc="Cozy corners, warm coffee, and sweet conversations."
-                    icon="☕"
-                    colSpan="col-span-1"
-                    chapterIndex={3}
-                    viewId="cafes"
-                    bgGradient="bg-gradient-to-br from-amber-950/40 via-zinc-900/80 to-black"
-                    borderColor="border-amber-500/30 hover:border-amber-500/60"
-                  />
-
-                  <BentoCard 
-                    title="Our Escapes"
-                    desc="Weekend trips, new horizons, and making memories far from home."
-                    icon="✈️"
-                    colSpan="sm:col-span-2 col-span-1"
-                    chapterIndex={4}
-                    viewId="escapes"
-                    bgGradient="bg-gradient-to-tl from-teal-950/40 via-zinc-900/80 to-black"
-                    borderColor="border-teal-500/30 hover:border-teal-500/60"
-                  />
-                </div>
-
+                {/* Centered Lock Button */}
                 <div className="w-full flex justify-center pt-6">
                   <button
                     onClick={onReset}
-                    className="w-full max-w-[300px] bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-rose-200 font-medium py-3 px-4 rounded-2xl text-[10px] tracking-widest uppercase transition-all cursor-pointer border border-white/10 shadow-lg"
+                    className="w-full max-w-[280px] bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-rose-200 font-medium py-3 px-4 rounded-2xl text-[10px] tracking-widest uppercase transition-all cursor-pointer border border-white/10 shadow-lg"
                   >
                     Lock the Vault 🔒
                   </button>
@@ -261,9 +257,10 @@ export const UnlockedStage = ({ onReset }) => {
         {activeView === "temples" && (
           <DivineStopsView key="temples" onComplete={() => handleCompleteChapter(2)} />
         )}
-        {/* ROUTES: PLACEHOLDERS */}
-        {activeView === "cafes" && <PlaceholderChapter key="cafes" title="Cafe Dates" onBack={() => handleCompleteChapter(3)} />}
-        {activeView === "escapes" && <PlaceholderChapter key="escapes" title="Our Escapes" onBack={() => handleCompleteChapter(4)} />}
+        {/* ROUTE: OUR ESCAPES */}
+        {activeView === "escapes" && (
+          <OurEscapesView key="escapes" onComplete={() => handleCompleteChapter(4)} />
+        )}
         
       </AnimatePresence>
 
